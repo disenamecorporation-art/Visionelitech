@@ -1,0 +1,6 @@
+{
+  "name": "Visionelitech Venezuela",
+  "description": "A premium, futuristic gaming technology storefront with glowing neon product carousels, responsive particle systems, interactive holographic specifications, and refined glassmorphic menus.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

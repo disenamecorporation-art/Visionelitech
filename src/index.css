@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Montserrat:wght@100;200;300;400&family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Montserrat", system-ui, -apple-system, sans-serif;
+  --font-display: "Montserrat", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  --font-montserrat: "Montserrat", sans-serif;
+}
+
+@layer base {
+  body {
+    background-color: #020203;
+    color: #f3f4f6;
+    font-family: var(--font-sans);
+  }
+}
+
+/* Custom animation for pulsating core lights */
+@keyframes cyberPulse {
+  0%, 100% {
+    opacity: 0.35;
+    filter: drop-shadow(0 0 5px rgba(168, 85, 247, 0.2));
+  }
+  50% {
+    opacity: 0.8;
+    filter: drop-shadow(0 0 15px rgba(168, 85, 247, 0.6));
+  }
+}
+
+.animate-cyber-pulse {
+  animation: cyberPulse 3s infinite ease-in-out;
+}
+
+/* Cinematic Neon flicker animation */
+@keyframes neonFlicker {
+  0%, 18%, 22%, 25%, 53%, 57%, 100% {
+    text-shadow: 0 0 8px rgba(16, 185, 129, 0.8), 0 0 20px rgba(16, 185, 129, 0.5), 0 0 40px rgba(16, 185, 129, 0.3);
+    opacity: 1;
+  }
+  20%, 24%, 55% {
+    text-shadow: none;
+    opacity: 0.45;
+  }
+}
+
+.animate-neon-flicker {
+  animation: neonFlicker 6s infinite ease-in-out;
+}
+
+/* Glow transition effect */
+.neon-glow-btn {
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.15);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.neon-glow-btn:hover {
+  box-shadow: 0 0 25px rgba(59, 130, 246, 0.4);
+}
+
