@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useMemo } from "react";
+import React, { useRef, useEffect, useMemo, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useTexture, Float, Sparkles, PerspectiveCamera, Html } from "@react-three/drei";
 import { EffectComposer, Bloom, Vignette, Noise } from "@react-three/postprocessing";
@@ -367,8 +367,50 @@ function SceneContent({ isMobile }: { isMobile: boolean }) {
   );
 }
 
-// Main Canvas Wrapper Component
+// Main Canvas Wrapper Component with WebGL detection and fallback
 export default function HeroScene({ isMobile }: HeroSceneProps) {
+  const [webGlSupported, setWebGlSupported] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    try {
+      const canvas = document.createElement("canvas");
+      const support = !!(
+        window.WebGLRenderingContext &&
+        (canvas.getContext("webgl") || canvas.getContext("experimental-webgl"))
+      );
+      setWebGlSupported(support);
+    } catch (e) {
+      setWebGlSupported(false);
+    }
+  }, []);
+
+  // While checking, render black
+  if (webGlSupported === null) {
+    return <div className="w-full h-full bg-black" />;
+  }
+
+  // Fallback beautiful static header if WebGL is not supported
+  if (!webGlSupported) {
+    return (
+      <div className="w-full h-full relative flex flex-col items-center justify-center bg-black" id="hero-canvas-viewport">
+        {/* Ambient grid background overlay */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:35px_35px] opacity-20" />
+        <div className="absolute w-[300px] h-[300px] bg-blue-500/10 rounded-full blur-[120px]" />
+        
+        <div className="z-10 flex flex-col items-center text-center px-6">
+          <img 
+            src="/assets/icono.png" 
+            alt="Visionelitech Logo" 
+            className="w-24 h-24 object-contain drop-shadow-[0_0_25px_rgba(0,240,255,0.35)] animate-pulse-slow mb-6"
+          />
+          <h1 className="font-montserrat font-extralight text-3xl sm:text-5xl tracking-[0.45em] text-white/95 uppercase">
+            BIENVENIDO
+          </h1>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full h-full relative" id="hero-canvas-viewport">
       <Canvas 
@@ -380,6 +422,7 @@ export default function HeroScene({ isMobile }: HeroSceneProps) {
           depth: true
         }}
         className="w-full h-full"
+        onError={() => setWebGlSupported(false)}
       >
         <React.Suspense fallback={null}>
           <SceneContent isMobile={isMobile} />

@@ -42,6 +42,17 @@ export default function LoadingScreen({ onFinished }: LoadingScreenProps) {
     }
   }, [percentage, active, onFinished]);
 
+  // Safety fallback: force fade out of loading screen after 3.5 seconds
+  // to guarantee the user gets inside the experience even on slow or WebGL-failing browsers
+  useEffect(() => {
+    const safetyTimer = setTimeout(() => {
+      setVisible(false);
+      onFinished();
+    }, 3500);
+
+    return () => clearTimeout(safetyTimer);
+  }, [onFinished]);
+
   if (!visible) return null;
 
   return (
