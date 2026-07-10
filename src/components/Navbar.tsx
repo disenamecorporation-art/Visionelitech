@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Volume2, VolumeX, Menu, X, MessageSquareCode, ShoppingCart } from "lucide-react";
 import { cyberSound } from "./CyberSound";
+import logoUrl from "../assets/icono.png";
 
 interface NavbarProps {
   onMuteToggle: (isMuted: boolean) => void;
@@ -77,7 +78,7 @@ export default function Navbar({
           id="navbar-logo-btn"
         >
           <img 
-            src="/assets/icono.png" 
+            src={logoUrl} 
             alt="Logo" 
             className="w-10 h-10 object-contain drop-shadow-[0_0_12px_rgba(0,240,255,0.45)] group-hover:scale-110 transition-transform duration-300"
           />

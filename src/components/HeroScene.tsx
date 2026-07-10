@@ -5,6 +5,7 @@ import { EffectComposer, Bloom, Vignette, Noise } from "@react-three/postprocess
 import * as THREE from "three";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import logoUrl from "../assets/icono.png";
 
 // Register GSAP ScrollTrigger
 gsap.registerPlugin(ScrollTrigger);
@@ -108,7 +109,7 @@ function SceneContent({ isMobile }: { isMobile: boolean }) {
   const { camera } = useThree();
 
   // Load the real assets using Drei's useTexture (enforcing transparent background alpha channel)
-  const logoTexture = useTexture("/assets/icono.png");
+  const logoTexture = useTexture(logoUrl);
 
   // Filter settings for ultra premium sharpness
   logoTexture.minFilter = THREE.LinearFilter;
@@ -399,7 +400,7 @@ export default function HeroScene({ isMobile }: HeroSceneProps) {
         
         <div className="z-10 flex flex-col items-center text-center px-6">
           <img 
-            src="/assets/icono.png" 
+            src={logoUrl} 
             alt="Visionelitech Logo" 
             className="w-24 h-24 object-contain drop-shadow-[0_0_25px_rgba(0,240,255,0.35)] animate-pulse-slow mb-6"
           />

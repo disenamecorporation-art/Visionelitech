@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useProgress } from "@react-three/drei";
+import logoUrl from "../assets/icono.png";
 
 interface LoadingScreenProps {
   onFinished: () => void;
@@ -75,7 +76,7 @@ export default function LoadingScreen({ onFinished }: LoadingScreenProps) {
           id="loading-logo"
         >
           <img 
-            src="/assets/icono.png" 
+            src={logoUrl} 
             alt="Logo" 
             className="w-11 h-11 object-contain drop-shadow-[0_0_12px_rgba(0,240,255,0.45)]"
           />
