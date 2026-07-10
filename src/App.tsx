@@ -18,7 +18,7 @@ import LoadingScreen from "./components/LoadingScreen";
 import { ProductDetails } from "./types";
 import { cyberSound } from "./components/CyberSound";
 import { Sparkles, MessageSquareCode, Instagram, ShieldCheck, Mail } from "lucide-react";
-import logoUrl from "./assets/icono.png";
+import { logoBase64 } from "./assets/logoBase64";
 
 // Image assets for the widescreen Hero Carousel
 const IMAGE_ASSETS = {
@@ -185,7 +185,7 @@ export default function App() {
             <div className="md:col-span-4 space-y-5">
               <div className="flex items-center space-x-3">
                 <img 
-                  src={logoUrl} 
+                  src={logoBase64} 
                   alt="Logo" 
                   className="w-10 h-10 object-contain drop-shadow-[0_0_10px_rgba(0,240,255,0.45)]"
                 />

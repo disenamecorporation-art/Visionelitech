@@ -5,7 +5,7 @@ import { EffectComposer, Bloom, Vignette, Noise } from "@react-three/postprocess
 import * as THREE from "three";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import logoUrl from "../assets/icono.png";
+import { logoBase64 } from "../assets/logoBase64";
 
 // Register GSAP ScrollTrigger
 gsap.registerPlugin(ScrollTrigger);
@@ -108,11 +108,21 @@ function PerspectiveGrid({ isMobile }: { isMobile: boolean }) {
 function SceneContent({ isMobile }: { isMobile: boolean }) {
   const { camera } = useThree();
 
-  // Load the real assets using Drei's useTexture (enforcing transparent background alpha channel)
-  const logoTexture = useTexture(logoUrl);
-
-  // Filter settings for ultra premium sharpness
-  logoTexture.minFilter = THREE.LinearFilter;
+  // Load the logo texture natively from our embedded base64 module (bulletproof against CORS/network/file corruption issues)
+  const logoTexture = useMemo(() => {
+    const img = new Image();
+    img.src = logoBase64;
+    const texture = new THREE.Texture(img);
+    texture.minFilter = THREE.LinearFilter;
+    texture.colorSpace = THREE.SRGBColorSpace;
+    img.onload = () => {
+      texture.needsUpdate = true;
+    };
+    img.onerror = (e) => {
+      console.error("Failed to load base64 logo in WebGL:", e);
+    };
+    return texture;
+  }, []);
 
   // Refs for tracking and GSAP scroll manipulations
   const logoGroupRef = useRef<THREE.Group>(null);
@@ -400,7 +410,7 @@ export default function HeroScene({ isMobile }: HeroSceneProps) {
         
         <div className="z-10 flex flex-col items-center text-center px-6">
           <img 
-            src={logoUrl} 
+            src={logoBase64} 
             alt="Visionelitech Logo" 
             className="w-24 h-24 object-contain drop-shadow-[0_0_25px_rgba(0,240,255,0.35)] animate-pulse-slow mb-6"
           />
