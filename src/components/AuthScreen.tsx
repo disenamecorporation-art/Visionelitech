@@ -96,7 +96,7 @@ export default function AuthScreen({ mode, onClose, onLoginSuccess }: AuthScreen
             }
           }
 
-          setSuccessMsg('¡Registro exitoso en Supabase! Ya puedes iniciar sesión.');
+          setSuccessMsg('¡Registro exitoso! Ya puedes iniciar sesión.');
           setTimeout(() => {
             setAuthMode('login');
             setErrorMsg('');
