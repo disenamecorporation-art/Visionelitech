@@ -6,11 +6,12 @@ import { cyberSound } from "./CyberSound";
 
 interface SpecsViewerProps {
   onAddToCart: (product: ProductDetails) => void;
+  products?: ProductDetails[];
 }
 
-export default function SpecsViewer({ onAddToCart }: SpecsViewerProps) {
+export default function SpecsViewer({ onAddToCart, products = PRODUCTS_DATA }: SpecsViewerProps) {
   // Filter trending products defined in our database
-  const trendingProducts = PRODUCTS_DATA.filter((p) => p.isTrending);
+  const trendingProducts = products.filter((p) => p.isTrending);
 
   const handleAddToCartClick = (product: ProductDetails) => {
     cyberSound.playClick();
@@ -27,10 +28,10 @@ export default function SpecsViewer({ onAddToCart }: SpecsViewerProps) {
       
       <div className="flex flex-col items-center mb-12 text-center">
         <h3 className="font-sans font-light text-2xl md:text-3xl text-white tracking-wide uppercase">
-          PRODUCTOS <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">TENDENCIA GAMER</span>
+          PRODUCTOS <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">EN TENDENCIA</span>
         </h3>
         <p className="font-sans text-xs text-white/50 max-w-md mt-2">
-          Los componentes y periféricos de ultra-gama más cotizados con entrega inmediata en Venezuela.
+          Las ofertas más destacadas del mes, El hardware top que todos están comprando, con entrega inmediata en Venezuela.
         </p>
       </div>
 

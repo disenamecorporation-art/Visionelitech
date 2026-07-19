@@ -6,27 +6,28 @@ import { cyberSound } from "./CyberSound";
 
 interface RigBuilderProps {
   onAddToCart: (product: ProductDetails) => void;
+  products?: ProductDetails[];
 }
 
-export default function RigBuilder({ onAddToCart }: RigBuilderProps) {
+export default function RigBuilder({ onAddToCart, products = PRODUCTS_DATA }: RigBuilderProps) {
   // Components Data
-  const cpus = PRODUCTS_DATA.filter((p) => p.category === "cpu");
-  const gpus = PRODUCTS_DATA.filter((p) => p.category === "gpu");
-  const rams = PRODUCTS_DATA.filter((p) => p.category === "ram");
-  const storages = PRODUCTS_DATA.filter((p) => p.category === "storage");
-  const motherboards = PRODUCTS_DATA.filter((p) => p.category === "motherboard");
-  const psus = PRODUCTS_DATA.filter((p) => p.category === "psu");
-  const cases = PRODUCTS_DATA.filter((p) => p.category === "case");
-  const monitors = PRODUCTS_DATA.filter((p) => p.category === "monitor");
+  const cpus = products.filter((p) => p.category.toLowerCase() === "cpu" || p.category.toLowerCase() === "componentes" && p.subcategory?.toLowerCase().includes("procesador"));
+  const gpus = products.filter((p) => p.category.toLowerCase() === "gpu" || p.category.toLowerCase() === "componentes" && p.subcategory?.toLowerCase().includes("tarjeta"));
+  const rams = products.filter((p) => p.category.toLowerCase() === "ram" || p.category.toLowerCase() === "componentes" && p.subcategory?.toLowerCase().includes("memoria"));
+  const storages = products.filter((p) => p.category.toLowerCase() === "storage" || p.category.toLowerCase() === "componentes" && p.subcategory?.toLowerCase().includes("disco"));
+  const motherboards = products.filter((p) => p.category.toLowerCase() === "motherboard" || p.category.toLowerCase() === "componentes" && p.subcategory?.toLowerCase().includes("motherboard"));
+  const psus = products.filter((p) => p.category.toLowerCase() === "psu" || p.category.toLowerCase() === "componentes" && p.subcategory?.toLowerCase().includes("fuente"));
+  const cases = products.filter((p) => p.category.toLowerCase() === "case" || p.category.toLowerCase() === "componentes" && p.subcategory?.toLowerCase().includes("case"));
+  const monitors = products.filter((p) => p.category.toLowerCase() === "monitor" || p.category.toLowerCase() === "monitores");
 
   // Selected Components State
-  const [selectedCpu, setSelectedCpu] = useState<ProductDetails>(cpus[0] || PRODUCTS_DATA[0]);
-  const [selectedGpu, setSelectedGpu] = useState<ProductDetails>(gpus[0] || PRODUCTS_DATA[0]);
-  const [selectedRam, setSelectedRam] = useState<ProductDetails>(rams[0] || PRODUCTS_DATA[0]);
-  const [selectedStorage, setSelectedStorage] = useState<ProductDetails>(storages[0] || PRODUCTS_DATA[0]);
-  const [selectedMotherboard, setSelectedMotherboard] = useState<ProductDetails>(motherboards[0] || PRODUCTS_DATA[0]);
-  const [selectedPsu, setSelectedPsu] = useState<ProductDetails>(psus[0] || PRODUCTS_DATA[0]);
-  const [selectedCase, setSelectedCase] = useState<ProductDetails>(cases[0] || PRODUCTS_DATA[0]);
+  const [selectedCpu, setSelectedCpu] = useState<ProductDetails>(cpus[0] || products[0]);
+  const [selectedGpu, setSelectedGpu] = useState<ProductDetails>(gpus[0] || products[0]);
+  const [selectedRam, setSelectedRam] = useState<ProductDetails>(rams[0] || products[0]);
+  const [selectedStorage, setSelectedStorage] = useState<ProductDetails>(storages[0] || products[0]);
+  const [selectedMotherboard, setSelectedMotherboard] = useState<ProductDetails>(motherboards[0] || products[0]);
+  const [selectedPsu, setSelectedPsu] = useState<ProductDetails>(psus[0] || products[0]);
+  const [selectedCase, setSelectedCase] = useState<ProductDetails>(cases[0] || products[0]);
   const [selectedMonitor, setSelectedMonitor] = useState<ProductDetails | null>(null);
 
   // Active Category modal selector state

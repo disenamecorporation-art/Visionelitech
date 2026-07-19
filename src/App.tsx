@@ -13,12 +13,22 @@ import AboutUs from "./components/AboutUs";
 import ShopPage from "./components/ShopPage";
 import NeonCallToAction from "./components/NeonCallToAction";
 import ShoppingCartDrawer, { CartItem } from "./components/ShoppingCartDrawer";
+import AuthScreen from "./components/AuthScreen";
+import AdminPanel from "./components/AdminPanel";
+import UserProfile from "./components/UserProfile";
 import HeroScene from "./components/HeroScene";
 import LoadingScreen from "./components/LoadingScreen";
 import { ProductDetails } from "./types";
+import { PRODUCTS_DATA } from "./data";
 import { cyberSound } from "./components/CyberSound";
 import { Sparkles, MessageSquareCode, Instagram, ShieldCheck, Mail } from "lucide-react";
 import { logoBase64 } from "./assets/logoBase64";
+import { 
+  isSupabaseConfigured, 
+  getSupabaseProducts, 
+  saveProductToSupabase, 
+  deleteProductFromSupabase 
+} from "./lib/supabase";
 
 // Image assets for the widescreen Hero Carousel
 const IMAGE_ASSETS = {
@@ -30,6 +40,93 @@ export default function App() {
   const [isMuted, setIsMuted] = useState(true);
   const [activeSection, setActiveSection] = useState("inicio");
   const [selectedDetailsId, setSelectedDetailsId] = useState("definitive-rig-bundle");
+
+  // Dynamic products list stored in localStorage / Supabase
+  const [products, setProducts] = useState<ProductDetails[]>(() => {
+    const saved = localStorage.getItem("visionelitech_products");
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed && parsed.length > 0) return parsed;
+      } catch (e) {
+        console.error("Error loading products, falling back to defaults:", e);
+      }
+    }
+    return PRODUCTS_DATA;
+  });
+
+  // Sync with Supabase on startup if configured
+  useEffect(() => {
+    async function initSupabaseData() {
+      if (isSupabaseConfigured) {
+        const fetchedProds = await getSupabaseProducts(products);
+        setProducts(fetchedProds);
+        localStorage.setItem("visionelitech_products", JSON.stringify(fetchedProds));
+      }
+    }
+    initSupabaseData();
+  }, []);
+
+  const handleUpdateProducts = async (newProds: ProductDetails[]) => {
+    // 1. Instantly update local state & storage for snappy responsiveness
+    const oldProducts = [...products];
+    setProducts(newProds);
+    localStorage.setItem("visionelitech_products", JSON.stringify(newProds));
+
+    // 2. Sync asynchronously to Supabase
+    if (isSupabaseConfigured) {
+      try {
+        // Find deleted products
+        const deletedProds = oldProducts.filter(p => !newProds.some(np => np.id === p.id));
+        for (const p of deletedProds) {
+          await deleteProductFromSupabase(p.id);
+        }
+
+        // Find added or modified products
+        const modifiedOrAdded = newProds.filter(np => {
+          const original = oldProducts.find(p => p.id === np.id);
+          if (!original) return true; // Added
+          return JSON.stringify(original) !== JSON.stringify(np); // Modified
+        });
+
+        for (const p of modifiedOrAdded) {
+          await saveProductToSupabase(p);
+        }
+      } catch (err) {
+        console.error("Error syncing products to Supabase:", err);
+      }
+    }
+  };
+
+  // Auth States
+  const [userEmail, setUserEmail] = useState<string | null>(() => {
+    return localStorage.getItem("visionelitech_logged_user");
+  });
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState<boolean>(() => {
+    return localStorage.getItem("visionelitech_is_admin") === "true";
+  });
+
+  const handleLoginSuccess = (isAdmin: boolean, email: string) => {
+    setUserEmail(email);
+    setIsAdminLoggedIn(isAdmin);
+    localStorage.setItem("visionelitech_logged_user", email);
+    localStorage.setItem("visionelitech_is_admin", isAdmin ? "true" : "false");
+    
+    if (isAdmin) {
+      setActiveSection("admin");
+    } else {
+      setActiveSection("tienda");
+    }
+  };
+
+  const handleLogout = () => {
+    cyberSound.playClick();
+    setUserEmail(null);
+    setIsAdminLoggedIn(false);
+    localStorage.removeItem("visionelitech_logged_user");
+    localStorage.removeItem("visionelitech_is_admin");
+    setActiveSection("inicio");
+  };
 
   // Global Shopping Cart States
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
@@ -111,10 +208,27 @@ export default function App() {
         activeSection={activeSection}
         cartItemsCount={totalCartCount}
         onCartOpen={() => setCartOpen(true)}
+        isAdminLoggedIn={isAdminLoggedIn}
+        userEmail={userEmail}
+        onLogout={handleLogout}
       />
 
       {/* 3. Main views renderer */}
       <main className="relative z-10 w-full flex flex-col items-center">
+        {(activeSection === "login" || activeSection === "registro") && (
+          <AuthScreen 
+            mode={activeSection === "login" ? "login" : "registro"} 
+            onClose={() => handleNavigate("inicio")} 
+            onLoginSuccess={handleLoginSuccess}
+          />
+        )}
+        {activeSection === "admin" && (
+          <AdminPanel 
+            products={products} 
+            onUpdateProducts={handleUpdateProducts} 
+          />
+        )}
+        
         {activeSection === "inicio" && (
           <div className="w-full relative">
             {/* 3D Cinematic Scroll-Triggered Intro Block */}
@@ -145,7 +259,7 @@ export default function App() {
               />
 
               {/* Trending Products (combopack replaced as requested by the user) */}
-              <SpecsViewer onAddToCart={handleAddToCart} />
+              <SpecsViewer products={products} onAddToCart={handleAddToCart} />
 
               {/* Stunning Custom PC Neon Call to Action */}
               <NeonCallToAction
@@ -161,12 +275,12 @@ export default function App() {
 
         {/* WooCommerce Catalog View */}
         {activeSection === "tienda" && (
-          <ShopPage onAddToCart={handleAddToCart} />
+          <ShopPage products={products} onAddToCart={handleAddToCart} />
         )}
 
         {/* Custom PC builder view */}
         {activeSection === "armado" && (
-          <RigBuilder onAddToCart={handleAddToCart} />
+          <RigBuilder products={products} onAddToCart={handleAddToCart} />
         )}
 
         {/* Modular Info View */}
@@ -174,6 +288,17 @@ export default function App() {
           <div className="pt-24 w-full">
             <AboutUs />
           </div>
+        )}
+
+        {/* User Profile Dashboard (Mi Perfil) */}
+        {activeSection === "perfil" && userEmail && (
+          <UserProfile 
+            userEmail={userEmail}
+            products={products}
+            onLogout={handleLogout}
+            onAddToCart={handleAddToCart}
+            onNavigate={handleNavigate}
+          />
         )}
 
         {/* Premium Informative Footer */}
@@ -196,7 +321,7 @@ export default function App() {
               </p>
               <div className="flex items-center space-x-3 text-gray-400">
                 <a
-                  href="https://instagram.com"
+                  href="https://www.instagram.com/visionelitech.inc/"
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => cyberSound.playClick()}
@@ -206,7 +331,7 @@ export default function App() {
                   <Instagram size={14} />
                 </a>
                 <a
-                  href="https://wa.me/584240000000"
+                  href="https://wa.me/584162586839"
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => cyberSound.playClick()}
@@ -310,7 +435,7 @@ export default function App() {
           </div>
 
           <div className="max-w-7xl mx-auto border-t border-white/5 mt-10 pt-6 flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0 text-white/40 font-sans text-[11px]">
-            <span>© 2026 VISIONELITECH VENEZUELA. Todos los derechos reservados.</span>
+            <span>© 2026 VISIONELITECH. Todos los derechos reservados. | Hecho por Legaint Corporation</span>
             <div className="flex items-center space-x-4">
               <span className="flex items-center space-x-1 text-purple-400">
                 <ShieldCheck size={12} />

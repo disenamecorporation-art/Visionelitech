@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useMemo, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { useTexture, Float, Sparkles, PerspectiveCamera, Html } from "@react-three/drei";
+import { useTexture, Float, PerspectiveCamera, Html } from "@react-three/drei";
 import { EffectComposer, Bloom, Vignette, Noise } from "@react-three/postprocessing";
 import * as THREE from "three";
 import { gsap } from "gsap";
@@ -127,7 +127,6 @@ function SceneContent({ isMobile }: { isMobile: boolean }) {
   // Refs for tracking and GSAP scroll manipulations
   const logoGroupRef = useRef<THREE.Group>(null);
   const logoMeshRef = useRef<THREE.Mesh>(null);
-  const sparklesRef = useRef<any>(null);
   const gridMeshRef = useRef<THREE.Mesh>(null);
 
   // Parallax tracking in useFrame on the inner logo mesh (leaving GSAP free to control the outer group on scroll)
@@ -181,48 +180,23 @@ function SceneContent({ isMobile }: { isMobile: boolean }) {
       }
     });
 
-    // A. Camera fly-through/dolly moving forward past objects
-    tl.to(camera.position, {
-      z: 1.2,
-      y: 0.1,
-      ease: "none"
-    }, 0);
-
-    // B. Incredible 3D Logo Choreography (spinning 3D rotation, zoom-in showing sides, and elegant recession)
-    tl.to(logoGroupRef.current.rotation, {
-      y: Math.PI * 4,     // 2 full 360-degree Y spins
-      x: Math.PI * 0.4,   // dimensional tilt on X axis
-      z: Math.PI * 0.25,  // elegant Z spin
+    // A. Simply scale down the logo smoothly as we scroll
+    tl.to(logoGroupRef.current.scale, {
+      x: 0,
+      y: 0,
+      z: 0,
       ease: "power2.inOut"
     }, 0);
 
-    tl.to(logoGroupRef.current.position, {
-      z: 2.2,             // fly forward to create a gorgeous depth zoom-in
-      y: 0.4,
-      x: 0.6,
-      ease: "power1.out"
-    }, 0)
-    .to(logoGroupRef.current.position, {
-      z: -4.5,            // fly deep into background space
-      y: -1.3,
-      x: -2.5,
-      ease: "power2.in"
-    }, 0.5);
+    if (logoMeshRef.current && logoMeshRef.current.material) {
+      const mat = logoMeshRef.current.material as THREE.Material;
+      tl.to(mat, {
+        opacity: 0,
+        ease: "power2.inOut"
+      }, 0);
+    }
 
-    tl.to(logoGroupRef.current.scale, {
-      x: 1.5,
-      y: 1.5,
-      z: 1.5,
-      ease: "power1.out"
-    }, 0)
-    .to(logoGroupRef.current.scale, {
-      x: 0.05,
-      y: 0.05,
-      z: 0.05,
-      ease: "power2.in"
-    }, 0.5);
-
-    // D. Grid material opacity fades to 0
+    // B. Grid material opacity fades to 0
     if (gridMeshRef.current && gridMeshRef.current.material) {
       const mat = gridMeshRef.current.material as THREE.ShaderMaterial;
       tl.to(mat.uniforms.uOpacity, {
@@ -230,22 +204,12 @@ function SceneContent({ isMobile }: { isMobile: boolean }) {
         ease: "power2.inOut"
       }, 0);
       tl.to(mat.uniforms.uScroll, {
-        value: 6.0,
+        value: 2.0,
         ease: "none"
       }, 0);
     }
 
-    // E. Sparkles scale down/away
-    if (sparklesRef.current) {
-      tl.to(sparklesRef.current.scale, {
-        x: 0.001,
-        y: 0.001,
-        z: 0.001,
-        ease: "power2.inOut"
-      }, 0);
-    }
-
-    // F. DOM elements fading
+    // C. DOM elements fading
     tl.to("#hero-text-container", {
       opacity: 0,
       scale: 0.5,
@@ -260,7 +224,7 @@ function SceneContent({ isMobile }: { isMobile: boolean }) {
       ease: "power1.out"
     }, 0);
 
-    // G. Reveal main content (DOM) on scroll
+    // D. Reveal main content (DOM) on scroll
     tl.fromTo("#main-content", 
       { 
         opacity: 0,
@@ -299,18 +263,6 @@ function SceneContent({ isMobile }: { isMobile: boolean }) {
       {/* Perspective Grid Floor */}
       <group ref={gridMeshRef as any}>
         <PerspectiveGrid isMobile={isMobile} />
-      </group>
-
-      {/* Drei Sparkles for atmospheric floating dust particles */}
-      <group ref={sparklesRef}>
-        <Sparkles 
-          count={isMobile ? 35 : 120} 
-          scale={[15, 8, 15]} 
-          size={1.6} 
-          speed={0.4} 
-          color="#00f0ff" 
-          opacity={0.65} 
-        />
       </group>
 
       {/* Cinematic Ambient Lighting */}

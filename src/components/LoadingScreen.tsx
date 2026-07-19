@@ -69,28 +69,7 @@ export default function LoadingScreen({ onFinished }: LoadingScreenProps) {
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:35px_35px] pointer-events-none opacity-40" />
       <div className="absolute w-[300px] h-[300px] bg-[#00ff66]/5 rounded-full blur-[100px] animate-pulse pointer-events-none" />
 
-      <div className="space-y-6 text-center max-w-sm w-full px-8 relative z-10">
-        {/* Animated metallic-style branding node */}
-        <div 
-          className="relative w-16 h-16 mx-auto flex items-center justify-center rounded-2xl bg-black/40 border border-white/10 shadow-[0_0_25px_rgba(59,130,246,0.3)] animate-[cyberPulse_3s_infinite_ease-in-out]"
-          id="loading-logo"
-        >
-          <img 
-            src={logoBase64} 
-            alt="Logo" 
-            className="w-11 h-11 object-contain drop-shadow-[0_0_12px_rgba(0,240,255,0.45)]"
-          />
-        </div>
-        
-        <div className="space-y-2">
-          <span className="font-sans text-[9px] text-[#00f0ff] tracking-[0.4em] block uppercase font-bold animate-pulse">
-            SISTEMA DE ULTRA-VANGUARDIA
-          </span>
-          <h3 className="font-sans font-bold text-xs text-white tracking-[0.2em] uppercase">
-            Cargando experiencia...
-          </h3>
-        </div>
-
+      <div className="space-y-4 text-center max-w-sm w-full px-8 relative z-10">
         {/* Neon Progress Bar Wrapper */}
         <div className="w-full h-[3px] bg-white/5 rounded-full overflow-hidden relative border border-white/5 shadow-[0_0_10px_rgba(0,0,0,0.8)]">
           <div 
@@ -102,8 +81,7 @@ export default function LoadingScreen({ onFinished }: LoadingScreenProps) {
           />
         </div>
 
-        <div className="flex justify-between items-center text-sans text-[10px] text-white/30 font-mono tracking-wider px-1">
-          <span>SECURE PROTOCOL</span>
+        <div className="flex justify-center items-center text-sans text-[11px] text-white/50 font-mono tracking-widest">
           <span>{percentage}%</span>
         </div>
       </div>

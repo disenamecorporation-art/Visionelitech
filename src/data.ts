@@ -3,6 +3,18 @@ import { CarouselSlide, ProductDetails } from "./types";
 // Exchange rate for premium Venezuelan currency formatting (e.g. 39.5 VES per USD)
 export const EXCHANGE_RATE_VES = 39.5;
 
+export const PRODUCT_CATEGORIES = {
+  "Pc Gamer": ["PC GAMER Intel", "Pc Gamer AMD"],
+  "Pc Oficina": ["Pc Oficina Nuevas", "Pc Oficina Refurbished"],
+  "Componentes": ["Procesador AMD", "Procesador INTEL", "Motherboards AMD", "Motherboards INTEL", "Memorias RAM Pc", "Memorias RAM Laptops", "Disco de estado Solido", "Disco M.2", "Refrigeración Líquida", "Disipador de torre", "Fuentes de poder", "Tarjetas de vídeo", "Case", "UPS/Regulador", "Bases para laptops", "Brazos para monitores"],
+  "Periféricos": ["Teclados", "Mouse", "Audífonos", "Gamepad", "Mousepad", "Micrófonos", "Cornetas", "WebCam"],
+  "Monitores": [],
+  "Laptops": ["Laptops GAMING", "Laptops de oficina", "Laptops Refurbished"],
+  "Mesas GAMING": [],
+  "Sillas GAMING": [],
+  "Impresoras": []
+};
+
 export const PRODUCTS_DATA: ProductDetails[] = [
   // Finished builds / Combos
   {

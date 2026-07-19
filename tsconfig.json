@@ -26,6 +26,9 @@
   "exclude": [
     "node_modules",
     "dist",
-    "src_backup_Vision_v1"
+    "src_backup_Vision_v1",
+    "src_VisionSuperTerminator",
+    "src_Terminator_Visionelitech",
+    "repo"
   ]
 }

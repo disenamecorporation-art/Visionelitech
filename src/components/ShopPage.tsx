@@ -1,23 +1,29 @@
 import React, { useState, useMemo } from "react";
 import { Search, SlidersHorizontal, Sliders, ChevronDown, Check, ShoppingCart, Info, CheckCircle2, X, Sparkles, ShieldCheck, Truck } from "lucide-react";
 import { ProductDetails } from "../types";
-import { PRODUCTS_DATA } from "../data";
+import { PRODUCTS_DATA, PRODUCT_CATEGORIES } from "../data";
 import { cyberSound } from "./CyberSound";
 
 interface ShopPageProps {
   onAddToCart: (product: ProductDetails) => void;
+  products?: ProductDetails[];
 }
 
-export default function ShopPage({ onAddToCart }: ShopPageProps) {
+export default function ShopPage({ onAddToCart, products = PRODUCTS_DATA }: ShopPageProps) {
   // Filters States
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [selectedCategory, setSelectedCategory] = useState<{parent: string, sub?: string}>({ parent: "all" });
   const [priceRange, setPriceRange] = useState<number>(5000);
   const [sortBy, setSortBy] = useState<string>("default");
   const [stockOnly, setStockOnly] = useState<boolean>(false);
 
   // Active hover info for specs tooltip
   const [hoveredSpecsProductId, setHoveredSpecsProductId] = useState<string | null>(null);
+
+  const handleCategorySelect = (parent: string, sub?: string) => {
+    cyberSound.playClick();
+    setSelectedCategory({ parent, sub });
+  };
 
   // WooCommerce Detail Popup State
   const [selectedProduct, setSelectedProduct] = useState<ProductDetails | null>(null);
@@ -69,35 +75,27 @@ export default function ShopPage({ onAddToCart }: ShopPageProps) {
     ].filter(Boolean);
   }, [selectedProduct]);
 
-  const categoriesList = [
-    { id: "all", label: "Todo el Catálogo" },
-    { id: "pc", label: "Computadoras Armadas" },
-    { id: "perifericos", label: "Periféricos & Teclados" },
-    { id: "audio", label: "Audio de Competencia" },
-    { id: "sillas", label: "Sillas Ergonómicas" },
-    { id: "hardware", label: "Componentes & Hardware" }
-  ];
+  const categories = useMemo(() => PRODUCT_CATEGORIES, []);
+  const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
 
   // Helper to map product categories to filter groups
-  const matchesCategoryGroup = (prodCat: string, filterGroup: string) => {
-    if (filterGroup === "all") return true;
-    if (filterGroup === "hardware") {
-      // Components hardware list
-      return ["cpu", "gpu", "ram", "storage", "motherboard", "psu", "case"].includes(prodCat);
-    }
-    return prodCat === filterGroup;
+  const matchesCategoryGroup = (product: ProductDetails, selected: {parent: string, sub?: string}) => {
+    if (selected.parent === "all") return true;
+    if (product.category !== selected.parent) return false;
+    if (selected.sub && product.subcategory !== selected.sub) return false;
+    return true;
   };
 
   // Filtered and Sorted Products
   const processedProducts = useMemo(() => {
-    return PRODUCTS_DATA.filter((product) => {
+    return products.filter((product) => {
       // Search text match
       const textMatch =
         product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         product.tagline.toLowerCase().includes(searchQuery.toLowerCase());
 
       // Category group match
-      const catMatch = matchesCategoryGroup(product.category, selectedCategory);
+      const catMatch = matchesCategoryGroup(product, selectedCategory);
 
       // Price limit match
       const priceMatch = product.priceUSD <= priceRange;
@@ -145,7 +143,7 @@ export default function ShopPage({ onAddToCart }: ShopPageProps) {
                 onClick={() => {
                   cyberSound.playClick();
                   setSearchQuery("");
-                  setSelectedCategory("all");
+                  setSelectedCategory({ parent: "all" });
                   setPriceRange(5000);
                   setSortBy("default");
                   setStockOnly(false);
@@ -175,24 +173,59 @@ export default function ShopPage({ onAddToCart }: ShopPageProps) {
             <div className="space-y-2">
               <label className="font-sans text-[10px] text-white/40 tracking-wider block uppercase">Categorías</label>
               <div className="flex flex-col space-y-1.5">
-                {categoriesList.map((cat) => {
-                  const isActive = selectedCategory === cat.id;
+                {/* "All" category */}
+                <button
+                  onClick={() => handleCategorySelect("all")}
+                  className={`text-left text-xs py-2 px-3 rounded-xl border transition-all duration-300 flex items-center justify-between cursor-pointer ${
+                    selectedCategory.parent === "all"
+                      ? "bg-blue-500/10 border-blue-400/30 text-white font-bold"
+                      : "bg-transparent border-transparent text-gray-400 hover:text-white hover:bg-white/5"
+                  }`}
+                >
+                  <span>Todo el Catálogo</span>
+                  {selectedCategory.parent === "all" && <Check size={12} className="text-blue-400" />}
+                </button>
+
+                {Object.entries(categories).map(([parent, subcategories]) => {
+                  const isExpanded = expandedCategory === parent;
+                  const isParentActive = selectedCategory.parent === parent;
+                  
                   return (
-                    <button
-                      key={cat.id}
-                      onClick={() => {
-                        cyberSound.playClick();
-                        setSelectedCategory(cat.id);
-                      }}
-                      className={`text-left text-xs py-2 px-3 rounded-xl border transition-all duration-300 flex items-center justify-between cursor-pointer ${
-                        isActive
-                          ? "bg-blue-500/10 border-blue-400/30 text-white font-bold"
-                          : "bg-transparent border-transparent text-gray-400 hover:text-white hover:bg-white/5"
-                      }`}
-                    >
-                      <span>{cat.label}</span>
-                      {isActive && <Check size={12} className="text-blue-400" />}
-                    </button>
+                    <div key={parent} className="space-y-1">
+                      <button
+                        onClick={() => {
+                          cyberSound.playClick();
+                          if (subcategories.length > 0) setExpandedCategory(isExpanded ? null : parent);
+                          handleCategorySelect(parent);
+                        }}
+                        className={`w-full text-left text-xs py-2 px-3 rounded-xl border transition-all duration-300 flex items-center justify-between cursor-pointer ${
+                          isParentActive
+                            ? "bg-blue-500/10 border-blue-400/30 text-white font-bold"
+                            : "bg-transparent border-transparent text-gray-400 hover:text-white hover:bg-white/5"
+                        }`}
+                      >
+                        <span>{parent}</span>
+                        {subcategories.length > 0 && <ChevronDown size={12} className={`transition-transform ${isExpanded ? "rotate-180" : ""}`} />}
+                      </button>
+                      
+                      {isExpanded && subcategories.map(sub => {
+                          const isSubActive = selectedCategory.sub === sub;
+                          return (
+                            <button
+                                key={sub}
+                                onClick={() => handleCategorySelect(parent, sub)}
+                                className={`w-full text-left text-[11px] py-1.5 px-6 rounded-xl border transition-all duration-300 flex items-center justify-between cursor-pointer ${
+                                    isSubActive
+                                    ? "bg-purple-500/10 border-purple-400/30 text-white"
+                                    : "bg-transparent border-transparent text-gray-500 hover:text-white hover:bg-white/5"
+                                }`}
+                            >
+                                <span>{sub}</span>
+                                {isSubActive && <Check size={10} className="text-purple-400" />}
+                            </button>
+                          )
+                      })}
+                    </div>
                   );
                 })}
               </div>
@@ -242,7 +275,7 @@ export default function ShopPage({ onAddToCart }: ShopPageProps) {
           {/* Controls Bar */}
           <div className="rounded-2xl border border-white/10 bg-[#07070a]/40 p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
             <span className="font-sans text-xs text-white/60">
-              Mostrando <strong className="text-white">{processedProducts.length}</strong> de {PRODUCTS_DATA.length} productos
+              Mostrando <strong className="text-white">{processedProducts.length}</strong> de {products.length} productos
             </span>
 
             {/* Sort Dropdown */}

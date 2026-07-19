@@ -6,3 +6,10 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# Backup directories
+src_backup_Vision_v1/
+src_Terminator_Visionelitech/
+src_VisionSuperTerminator/
+repo/
+

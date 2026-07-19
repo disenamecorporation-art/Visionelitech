@@ -1,5 +1,5 @@
 import React from "react";
-import { Landmark, Shield, Wrench, Truck, MapPin, Clock, MessageSquare, ExternalLink } from "lucide-react";
+import { Landmark, Shield, Wrench, Truck, MapPin, Clock, MessageSquare, ExternalLink, Instagram } from "lucide-react";
 import { cyberSound } from "./CyberSound";
 
 export default function AboutUs() {
@@ -12,10 +12,10 @@ export default function AboutUs() {
 
       <div className="flex flex-col items-center mb-12 text-center">
         <h3 className="font-sans font-light text-2xl md:text-3xl text-white tracking-wide uppercase">
-          SOBRE <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">VISIONELITECH VENEZUELA</span>
+          SOBRE <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">VISIONELITECH</span>
         </h3>
         <p className="font-sans text-xs text-white/50 max-w-md mt-2">
-          La tienda de tecnología premium líder en Caracas, con setups de máxima potencia.
+          La tienda de tecnología premium líder en Caracas, de máxima potencia.
         </p>
       </div>
 
@@ -73,14 +73,14 @@ export default function AboutUs() {
             NUESTRA SEDE DE EXHIBICIÓN
           </h4>
           <p className="font-sans text-xs text-white/60 leading-relaxed">
-            Prueba la potencia de los mejores componentes y periféricos mecánicos antes de concretar tu compra.
+            Asegura tu inversión: retira tus componentes y periféricos favoritos directo en tienda con asesoría experta.
           </p>
           <div className="space-y-2 text-xs text-white/50 font-sans">
             <div>
               <span>• CC de Tecnología, Chacao, Caracas, Venezuela.</span>
             </div>
             <div>
-              <span>• Lunes a Sábado - 10:00 AM a 7:00 PM</span>
+              <span>• Lunes a Sábado - 9:30 AM a 5:30 PM</span>
             </div>
           </div>
         </div>
@@ -92,12 +92,12 @@ export default function AboutUs() {
               ¿Deseas un presupuesto?
             </h5>
             <p className="font-sans text-xs text-white/50 mb-6 leading-relaxed">
-              Conversa con ventas para coordinar opciones de pago nacionales o internacionales.
+              Conversa con un asesor elite y ves detrás de tu objetivo Ahora!
             </p>
           </div>
 
           <a
-            href="https://wa.me/584240000000?text=Hola!%20Deseo%20hacer%20una%20consulta%20tecnica%20sobre%20sus%20equipos."
+            href="https://wa.me/584162586839"
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => cyberSound.playClick()}
@@ -109,6 +109,16 @@ export default function AboutUs() {
             <ExternalLink size={12} />
           </a>
         </div>
+      </div>
+      
+      {/* Social Links */}
+      <div className="flex justify-center gap-6 mt-8">
+        <a href="https://www.instagram.com/visionelitech.inc/" target="_blank" rel="noopener noreferrer" className="text-white hover:text-purple-400 transition-colors">
+          <Instagram size={28} />
+        </a>
+        <a href="https://wa.me/584162586839" target="_blank" rel="noopener noreferrer" className="text-white hover:text-purple-400 transition-colors">
+          <MessageSquare size={28} />
+        </a>
       </div>
     </section>
   );

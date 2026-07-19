@@ -10,6 +10,9 @@ interface NavbarProps {
   activeSection: string;
   cartItemsCount: number;
   onCartOpen: () => void;
+  isAdminLoggedIn?: boolean;
+  userEmail?: string | null;
+  onLogout?: () => void;
 }
 
 export default function Navbar({
@@ -18,7 +21,10 @@ export default function Navbar({
   onNavigate,
   activeSection,
   cartItemsCount,
-  onCartOpen
+  onCartOpen,
+  isAdminLoggedIn = false,
+  userEmail = null,
+  onLogout
 }: NavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -35,6 +41,8 @@ export default function Navbar({
     { id: "inicio", label: "INICIO" },
     { id: "tienda", label: "TIENDA" },
     { id: "armado", label: "DISEÑA TU PC" },
+    ...(isAdminLoggedIn ? [{ id: "admin", label: "PANEL ADMIN" }] : []),
+    ...(userEmail && !isAdminLoggedIn ? [{ id: "perfil", label: "MI PERFIL" }] : []),
     { id: "sobre-nosotros", label: "SOBRE NOSOTROS" }
   ];
 
@@ -112,7 +120,34 @@ export default function Navbar({
         </nav>
 
         {/* UTILITIES & TRIGGERS */}
-        <div className="flex items-center space-x-2.5">
+        <div className="flex items-center space-x-3">
+          {userEmail ? (
+            <div className="flex items-center space-x-2 border border-white/10 bg-white/5 py-1 px-3 rounded-full">
+              <button 
+                onClick={() => {
+                  if (!isAdminLoggedIn) {
+                    cyberSound.playClick();
+                    onNavigate("perfil");
+                  }
+                }}
+                className={`text-[9px] font-bold font-mono text-blue-400 max-w-[80px] md:max-w-[120px] truncate uppercase ${!isAdminLoggedIn ? "hover:text-blue-300 cursor-pointer" : ""}`}
+              >
+                {isAdminLoggedIn ? "👑 Admin" : userEmail.split("@")[0]}
+              </button>
+              <button 
+                onClick={onLogout} 
+                className="text-white/40 hover:text-red-400 font-sans text-[9px] font-bold tracking-wider uppercase transition-colors cursor-pointer"
+              >
+                Salir
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center space-x-2.5">
+              <button onClick={() => { cyberSound.playClick(); onNavigate("login"); }} className="text-white/70 hover:text-blue-400 font-sans text-[10px] font-bold tracking-widest uppercase cursor-pointer">Login</button>
+              <button onClick={() => { cyberSound.playClick(); onNavigate("registro"); }} className="text-white/70 hover:text-blue-400 font-sans text-[10px] font-bold tracking-widest uppercase cursor-pointer">Registro</button>
+            </div>
+          )}
+          
           {/* Shopping Cart Button */}
           <button
             onClick={handleCartClick}

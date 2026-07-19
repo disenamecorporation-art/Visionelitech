@@ -37,7 +37,7 @@ export default function ShoppingCartDrawer({
     if (cartItems.length === 0) return;
 
     // Build a professional billing spec
-    let messageText = `*PEDIDO NUEVO - VISIONELITECH VENEZUELA*\n`;
+    let messageText = `*PEDIDO NUEVO - VISIONELITECH*\n`;
     messageText += `--------------------------------------\n\n`;
 
     cartItems.forEach((item, index) => {
@@ -191,6 +191,9 @@ export default function ShoppingCartDrawer({
             <div className="flex justify-between items-baseline text-xs font-sans text-white/50">
               <span>SUBTOTAL USD</span>
               <strong className="text-white text-base font-black">${totalUSD.toLocaleString()}</strong>
+            </div>
+            <div className="text-[10px] text-blue-400 font-sans italic text-right">
+              Envíos inmediatos nacionales Y delivery en toda caracas
             </div>
           </div>
 

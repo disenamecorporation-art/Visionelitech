@@ -8,7 +8,8 @@ export interface ProductDetails {
   id: string;
   name: string;
   tagline: string;
-  category: "pc" | "perifericos" | "audio" | "sillas" | "componentes" | "cpu" | "gpu" | "ram" | "storage" | "motherboard" | "psu" | "case" | "monitor";
+  category: string;
+  subcategory?: string;
   priceUSD: number;
   priceVES: number; // Venezuelan Bolivars exchange
   specs: ProductSpec[];
