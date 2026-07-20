@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Volume2, VolumeX, Menu, X, MessageSquareCode, ShoppingCart } from "lucide-react";
+import { Volume2, VolumeX, Menu, X, MessageSquareCode, ShoppingCart, User } from "lucide-react";
 import { cyberSound } from "./CyberSound";
 import { logoBase64 } from "../assets/logoBase64";
 
@@ -90,7 +90,7 @@ export default function Navbar({
             alt="Logo" 
             className="w-10 h-10 object-contain drop-shadow-[0_0_12px_rgba(0,240,255,0.45)] group-hover:scale-110 transition-transform duration-300"
           />
-          <span className="font-sans font-light text-xs tracking-[0.25em] text-white/90 group-hover:text-blue-400 transition-colors duration-300 uppercase select-none">
+          <span className="font-sans font-light text-[9px] sm:text-xs tracking-[0.2em] sm:tracking-[0.25em] text-white/90 group-hover:text-blue-400 transition-colors duration-300 uppercase select-none">
             VISIONELITECH
           </span>
         </button>
@@ -142,9 +142,26 @@ export default function Navbar({
               </button>
             </div>
           ) : (
-            <div className="flex items-center space-x-2.5">
-              <button onClick={() => { cyberSound.playClick(); onNavigate("login"); }} className="text-white/70 hover:text-blue-400 font-sans text-[10px] font-bold tracking-widest uppercase cursor-pointer">Login</button>
-              <button onClick={() => { cyberSound.playClick(); onNavigate("registro"); }} className="text-white/70 hover:text-blue-400 font-sans text-[10px] font-bold tracking-widest uppercase cursor-pointer">Registro</button>
+            <div className="flex items-center space-x-2">
+              <button 
+                onClick={() => { cyberSound.playClick(); onNavigate("login"); }} 
+                className="hidden md:block text-white/70 hover:text-blue-400 font-sans text-[10px] font-bold tracking-widest uppercase cursor-pointer"
+              >
+                Login
+              </button>
+              <button 
+                onClick={() => { cyberSound.playClick(); onNavigate("registro"); }} 
+                className="hidden md:block text-white/70 hover:text-blue-400 font-sans text-[10px] font-bold tracking-widest uppercase cursor-pointer"
+              >
+                Registro
+              </button>
+              <button 
+                onClick={() => { cyberSound.playClick(); onNavigate("login"); }} 
+                className="block md:hidden p-2 rounded-full border border-white/10 bg-white/5 text-gray-300 hover:text-white hover:bg-white/10 transition-all cursor-pointer flex items-center justify-center"
+                title="Login / Registro"
+              >
+                <User size={14} />
+              </button>
             </div>
           )}
           

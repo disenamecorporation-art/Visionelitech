@@ -389,11 +389,11 @@ export default function ShopPage({ onAddToCart, products = PRODUCTS_DATA }: Shop
       {/* WooCommerce style detail popup */}
       {selectedProduct && (
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm overflow-y-auto"
+          className="fixed inset-0 z-50 flex items-start md:items-center justify-center p-3 sm:p-4 bg-black/95 backdrop-blur-md overflow-y-auto"
           onClick={() => setSelectedProduct(null)}
         >
           <div 
-            className="relative w-full max-w-4xl rounded-3xl border border-white/10 bg-[#07070d] overflow-hidden shadow-2xl animate-in fade-in zoom-in-95 duration-300 grid grid-cols-1 md:grid-cols-12 gap-0"
+            className="relative w-full max-w-4xl rounded-3xl border border-white/10 bg-[#07070d] overflow-hidden shadow-2xl animate-in fade-in zoom-in-95 duration-300 grid grid-cols-1 md:grid-cols-12 gap-0 my-auto"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close button */}
@@ -408,7 +408,7 @@ export default function ShopPage({ onAddToCart, products = PRODUCTS_DATA }: Shop
             </button>
 
             {/* Left side: Beautiful image panel with 4 images switcher */}
-            <div className="md:col-span-6 bg-black/50 p-6 flex flex-col items-center justify-center border-r border-white/5 relative">
+            <div className="md:col-span-6 bg-black/50 p-6 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-white/5 relative">
               <div className="absolute inset-0 bg-radial from-blue-500/5 to-transparent opacity-60 pointer-events-none" />
               
               {/* Active Image */}
@@ -417,13 +417,13 @@ export default function ShopPage({ onAddToCart, products = PRODUCTS_DATA }: Shop
                   src={productImages[activeImageIndex] || selectedProduct.image} 
                   alt={selectedProduct.name}
                   referrerPolicy="no-referrer"
-                  className="w-full h-full max-h-[300px] object-contain drop-shadow-[0_10px_30px_rgba(0,180,255,0.2)] transition-all duration-300"
+                  className="w-full h-full max-h-[220px] md:max-h-[300px] object-contain drop-shadow-[0_10px_30px_rgba(0,180,255,0.2)] transition-all duration-300"
                 />
               </div>
 
               {/* Thumbnails Row (Up to 4 images) */}
               {productImages.length > 1 && (
-                <div className="flex gap-2.5 mt-4 z-10 relative">
+                <div className="flex gap-2.5 mt-2 md:mt-4 z-10 relative">
                   {productImages.map((img, idx) => (
                     <button
                       key={idx}
@@ -431,7 +431,7 @@ export default function ShopPage({ onAddToCart, products = PRODUCTS_DATA }: Shop
                         cyberSound.playClick();
                         setActiveImageIndex(idx);
                       }}
-                      className={`w-12 h-12 rounded-xl bg-black/40 border p-1 overflow-hidden transition-all duration-200 cursor-pointer shrink-0 ${
+                      className={`w-10 h-10 md:w-12 md:h-12 rounded-xl bg-black/40 border p-1 overflow-hidden transition-all duration-200 cursor-pointer shrink-0 ${
                         activeImageIndex === idx ? "border-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]" : "border-white/10 hover:border-white/20"
                       }`}
                     >
@@ -443,7 +443,7 @@ export default function ShopPage({ onAddToCart, products = PRODUCTS_DATA }: Shop
             </div>
 
             {/* Right side: Information Details */}
-            <div className="md:col-span-6 p-6 md:p-8 flex flex-col justify-between space-y-6">
+            <div className="md:col-span-6 p-5 md:p-8 flex flex-col justify-between space-y-6">
               <div className="space-y-4">
                 {/* Category & Stock Row */}
                 <div className="flex items-center gap-2.5">

@@ -70,17 +70,17 @@ export default function AboutUs() {
         {/* Physical store coordinates */}
         <div className="md:col-span-7 space-y-4">
           <h4 className="font-sans font-light text-lg text-white uppercase">
-            NUESTRA SEDE DE EXHIBICIÓN
+            Políticas de Entrega y Despacho
           </h4>
           <p className="font-sans text-xs text-white/60 leading-relaxed">
-            Asegura tu inversión: retira tus componentes y periféricos favoritos directo en tienda con asesoría experta.
+            Estimado cliente, le informamos que el procesamiento y despacho de sus órdenes se realiza estrictamente dentro de nuestro horario laboral (9:30 AM a 5:00 PM).
           </p>
           <div className="space-y-2 text-xs text-white/50 font-sans">
             <div>
-              <span>• CC de Tecnología, Chacao, Caracas, Venezuela.</span>
+              <span>- Servicio de Delivery: Válido únicamente para las zonas previamente acordadas de la ciudad</span>
             </div>
             <div>
-              <span>• Lunes a Sábado - 9:30 AM a 5:30 PM</span>
+              <span>- Envíos nacionales: Nos comprometemos a entregar su mercancía en la agencia de transporte de su preferencia en un plazo máximo de 24 horas una vez confirmado el pedido.</span>
             </div>
           </div>
         </div>
