@@ -221,7 +221,7 @@ export default function Navbar({
           })}
           
           <a
-            href="https://wa.me/584240000000?text=Hola!%20Estoy%20interesado%20en%20los%20equipos%20gamer%20de%20Visionelitech"
+            href="https://wa.me/584162586839?text=Hola!%20Estoy%20interesado%20en%20los%20equipos%20gamer%20de%20Visionelitech"
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => cyberSound.playClick()}

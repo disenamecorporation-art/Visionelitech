@@ -58,7 +58,7 @@ export default function ShoppingCartDrawer({
     messageText += `Deseo coordinar la entrega personal en Caracas o el envío nacional a mi ubicación.`;
 
     const encodedText = encodeURIComponent(messageText);
-    window.open(`https://wa.me/584240000000?text=${encodedText}`, "_blank");
+    window.open(`https://wa.me/584162586839?text=${encodedText}`, "_blank");
   };
 
   return (
