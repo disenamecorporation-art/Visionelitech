@@ -14,7 +14,8 @@ export interface ProductDetails {
   priceVES: number; // Venezuelan Bolivars exchange
   specs: ProductSpec[];
   highlights: string[];
-  stock: "DISPONIBLE" | "BAJO STOCK" | "PEDIDO PREVIO";
+  stock: "DISPONIBLE" | "BAJO STOCK" | "PEDIDO PREVIO" | "AGOTADO";
+  availableUnits?: number;
   image?: string;
   images?: string[];
   isTrending?: boolean;

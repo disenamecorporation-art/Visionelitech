@@ -22,7 +22,8 @@ export default function AdminPanel({ products, onUpdateProducts }: AdminPanelPro
   const [priceUSD, setPriceUSD] = useState<number>(0);
   const [category, setCategory] = useState<string>(Object.keys(PRODUCT_CATEGORIES)[0]);
   const [subcategory, setSubcategory] = useState<string>('');
-  const [stock, setStock] = useState<'DISPONIBLE' | 'BAJO STOCK' | 'PEDIDO PREVIO'>('DISPONIBLE');
+  const [stock, setStock] = useState<'DISPONIBLE' | 'BAJO STOCK' | 'PEDIDO PREVIO' | 'AGOTADO'>('DISPONIBLE');
+  const [availableUnits, setAvailableUnits] = useState<number>(5);
   const [isTrending, setIsTrending] = useState(false);
   const [highlightsInput, setHighlightsInput] = useState(''); // Separated by lines
   
@@ -53,6 +54,7 @@ export default function AdminPanel({ products, onUpdateProducts }: AdminPanelPro
     setCategory(product.category);
     setSubcategory(product.subcategory || '');
     setStock(product.stock || 'DISPONIBLE');
+    setAvailableUnits(product.availableUnits ?? 5);
     setIsTrending(!!product.isTrending);
     setHighlightsInput((product.highlights || []).join('\n'));
 
@@ -77,6 +79,7 @@ export default function AdminPanel({ products, onUpdateProducts }: AdminPanelPro
     setCategory(categories[0]);
     setSubcategory('');
     setStock('DISPONIBLE');
+    setAvailableUnits(5);
     setIsTrending(false);
     setHighlightsInput('');
     setImgUrl1('');
@@ -148,6 +151,7 @@ export default function AdminPanel({ products, onUpdateProducts }: AdminPanelPro
             category,
             subcategory: subcategory || undefined,
             stock,
+            availableUnits,
             isTrending,
             highlights,
             image: mainImage,
@@ -171,6 +175,7 @@ export default function AdminPanel({ products, onUpdateProducts }: AdminPanelPro
         category,
         subcategory: subcategory || undefined,
         stock,
+        availableUnits,
         isTrending,
         highlights,
         image: mainImage,
@@ -386,8 +391,8 @@ export default function AdminPanel({ products, onUpdateProducts }: AdminPanelPro
               </div>
             </div>
 
-            {/* Row 2: Price and Stock */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Row 2: Price, Stock Status, Available Units & Special Settings */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="space-y-1.5">
                 <label className="text-[10px] text-white/40 font-bold uppercase tracking-wider block">Precio (USD) *</label>
                 <div className="relative">
@@ -402,7 +407,7 @@ export default function AdminPanel({ products, onUpdateProducts }: AdminPanelPro
                   />
                 </div>
                 <span className="text-[10px] text-white/30 block">
-                  Conversión aprox. VES: <strong className="text-white/60 font-mono">Bs. {Math.round(priceUSD * 39.5 * 100) / 100}</strong>
+                  VES: <strong className="text-white/60 font-mono">Bs. {Math.round(priceUSD * 39.5 * 100) / 100}</strong>
                 </span>
               </div>
 
@@ -416,11 +421,28 @@ export default function AdminPanel({ products, onUpdateProducts }: AdminPanelPro
                   <option value="DISPONIBLE">🟢 DISPONIBLE</option>
                   <option value="BAJO STOCK">🟡 BAJO STOCK</option>
                   <option value="PEDIDO PREVIO">🔵 PEDIDO PREVIO</option>
+                  <option value="AGOTADO">🔴 AGOTADO</option>
                 </select>
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-[10px] text-white/40 font-bold uppercase tracking-wider block">Ajustes Especiales</label>
+                <label className="text-[10px] text-white/40 font-bold uppercase tracking-wider block">Unidades Disponibles</label>
+                <div className="relative">
+                  <Package className="absolute left-3.5 top-3 text-white/30" size={13} />
+                  <input 
+                    type="number" 
+                    min="0"
+                    value={availableUnits}
+                    onChange={e => setAvailableUnits(Number(e.target.value))}
+                    placeholder="Ej. 5"
+                    className="w-full pl-9 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-xs text-white focus:ring-1 focus:ring-blue-500 outline-none transition-all font-mono"
+                  />
+                </div>
+                <span className="text-[10px] text-white/30 block">Cantidad en stock</span>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-[10px] text-white/40 font-bold uppercase tracking-wider block">Ajustes</label>
                 <div className="flex items-center h-10 px-4 bg-white/5 border border-white/10 rounded-xl">
                   <input 
                     type="checkbox" 

@@ -337,6 +337,8 @@ export default function ShopPage({ onAddToCart, products = PRODUCTS_DATA }: Shop
                           ? "bg-green-500/10 text-green-400 border-green-500/20"
                           : product.stock === "BAJO STOCK"
                           ? "bg-orange-500/10 text-orange-400 border-orange-500/20"
+                          : product.stock === "AGOTADO"
+                          ? "bg-red-500/10 text-red-400 border-red-500/20"
                           : "bg-blue-500/10 text-blue-400 border-blue-500/20"
                       }`}>
                         ● {product.stock}
@@ -446,16 +448,23 @@ export default function ShopPage({ onAddToCart, products = PRODUCTS_DATA }: Shop
             <div className="md:col-span-6 p-5 md:p-8 flex flex-col justify-between space-y-6">
               <div className="space-y-4">
                 {/* Category & Stock Row */}
-                <div className="flex items-center gap-2.5">
+                <div className="flex items-center gap-2.5 flex-wrap">
                   <span className="text-[10px] text-blue-400 font-bold tracking-widest uppercase bg-blue-500/10 px-2.5 py-0.5 rounded-full border border-blue-500/20">
                     {selectedProduct.category.toUpperCase()}
                   </span>
                   <span className={`px-2 py-0.5 rounded-full text-[9px] font-sans font-bold tracking-wider border uppercase ${
                     selectedProduct.stock === "DISPONIBLE"
                       ? "bg-green-500/10 text-green-400 border-green-500/20"
-                      : "bg-orange-500/10 text-orange-400 border-orange-500/20"
+                      : selectedProduct.stock === "BAJO STOCK"
+                      ? "bg-orange-500/10 text-orange-400 border-orange-500/20"
+                      : selectedProduct.stock === "AGOTADO"
+                      ? "bg-red-500/10 text-red-400 border-red-500/20"
+                      : "bg-blue-500/10 text-blue-400 border-blue-500/20"
                   }`}>
                     ● {selectedProduct.stock}
+                  </span>
+                  <span className="text-[10px] font-mono text-white/70 bg-white/5 px-2.5 py-0.5 rounded-full border border-white/10">
+                    📦 Unidades disponibles: <strong className="text-white font-bold">{selectedProduct.availableUnits ?? 5}</strong>
                   </span>
                 </div>
 

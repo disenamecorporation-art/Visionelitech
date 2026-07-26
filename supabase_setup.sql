@@ -76,6 +76,7 @@ CREATE TABLE IF NOT EXISTS public.products (
     category TEXT NOT NULL,
     subcategory TEXT,
     stock TEXT NOT NULL DEFAULT 'DISPONIBLE',
+    available_units INTEGER DEFAULT 5,
     is_trending BOOLEAN DEFAULT FALSE,
     image TEXT,
     images JSONB DEFAULT '[]'::jsonb,
